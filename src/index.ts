@@ -44,10 +44,12 @@ async function init () {
                 }
                 
 
-                // TODO: Spin container
                 for(const record of event.Records) {
                     const {s3} = record;
                     const { bucket , object: { key }} = s3;
+                    
+                    // Spin container
+                    
                 }
 
 
