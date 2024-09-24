@@ -69,13 +69,13 @@ async function init () {
 
 
                     const runTaskCommand = new RunTaskCommand({
-                        taskDefinition: "arn:aws:ecs:us-east-1:767626660395:task-definition/video-transcoder:2",
-                        cluster: "arn:aws:ecs:us-east-1:767626660395:cluster/shailesh-dev",
+                        taskDefinition: process.env.ECS_TASK_ARN,
+                        cluster: process.env.ECS_CLUSTER_ID,
                         launchType:"FARGATE",
                         networkConfiguration:{
                             awsvpcConfiguration: {
-                                securityGroups: ["sg-04296ab8fe68b0f90"],
-                                subnets: ["subnet-0169723635670a774", "subnet-09fd8fa06656e6506","subnet-0d2383e327b656927", "subnet-097c43dbadc32fa5f"],
+                                securityGroups: [process.env.ECS_SECURITY_GROUP],
+                                subnets: ['SUBNET-1', 'subnet-2'],
                                 assignPublicIp:"ENABLED",
                             },
                         },
@@ -88,11 +88,11 @@ async function init () {
                                 environment: [
                                     { // KeyValuePair
                                         name: "UPLOAD_BUCKET_NAME",
-                                        value: "shailesh.dev-learn",
+                                        value: process.env.AWS_UPLOAD_BUCKET_NAME,
                                     },
                                     { // KeyValuePair
                                         name: "AWS_BUCKET_NAME",
-                                        value: "shailesh-dev-private",
+                                        value: process.env.AWS_BUCKET_NAME,
                                     },
 
                                     { // KeyValuePair
