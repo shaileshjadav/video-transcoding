@@ -16,7 +16,7 @@ import { CORS_ORIGINS, VIDEO_STATUS_CRON_INTERVAL_MINUTES } from "./config/const
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-const allowedOrigins = CORS_ORIGINS?.split(",");
+const allowedOrigins = process.env.ENVIRONMENT==='dev'? '*' :CORS_ORIGINS?.split(",");
 
   // CORS configuration
 const corsOptions = {
