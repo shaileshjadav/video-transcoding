@@ -6,8 +6,10 @@ import { useVideoStore } from "@/hooks/useVideoList";
 import { useShallow } from "zustand/shallow";
 import { VIDEO_STATUS } from "@/lib/constants";
 import { useVideoPlayerStore } from "@/hooks/useVideoPlayer";
+import { useAuth } from "@clerk/nextjs";
 
 const VideoListContainer: React.FC = () => {
+  const { isLoaded, isSignedIn } = useAuth();
   const selectVideo = useVideoPlayerStore((state) => state.selectVideo);
   const setEmbedVideo = useVideoStore((state) => state.setEmbedVideo);
 
@@ -21,10 +23,11 @@ const VideoListContainer: React.FC = () => {
   const refresh = useVideoStore((state) => state.refresh);
 
   useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
     refresh();
     const interval = setInterval(() => refresh(), 10000);
     return () => clearInterval(interval);
-  }, [refresh]);
+  }, [refresh, isLoaded, isSignedIn]);
 
   const handleVideoSelect = (videoId: string) => {
     const video = videos.find((v) => v.id === videoId);

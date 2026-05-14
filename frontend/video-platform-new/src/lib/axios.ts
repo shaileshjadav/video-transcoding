@@ -1,6 +1,10 @@
-"use client";
-
 import axios from "axios";
+
+let getTokenFn: (() => Promise<string | null>) | null = null;
+
+export const setAuthTokenGetter = (fn: () => Promise<string | null>) => {
+  getTokenFn = fn;
+};
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
@@ -8,13 +12,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    if (typeof window !== "undefined") {
-      const clerk = (window as any).Clerk;
-      if (clerk?.session) {
-        const token = await clerk.session.getToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
+    if (getTokenFn) {
+      const token = await getTokenFn();
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
     }
     config.headers["Content-Type"] = "application/json";
